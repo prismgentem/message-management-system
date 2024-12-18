@@ -1,6 +1,5 @@
 package org.example.messagemanagementsystem.client;
 
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.example.messagemanagementsystem.model.openai.request.OpenAiRequest;
 import org.example.messagemanagementsystem.model.openai.response.OpenAiResponse;
