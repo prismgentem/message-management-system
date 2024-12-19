@@ -8,5 +8,5 @@ import lombok.*;
 @AllArgsConstructor
 public class MessageAnalysisResponse {
     private String result;
-    private String analysis;
+    private String model;
 }
