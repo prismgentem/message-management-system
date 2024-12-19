@@ -23,7 +23,7 @@ public class OpenAiService {
         var response = openAIClient.postMessageToGpt(gptRequest);
         return MessageAnalysisResponse.builder()
                 .result(String.valueOf(response.getChoices().get(0).getMessage().getContent()))
-                .analysis("оценка от gpt")
+                .model(request.getModel())
                 .build();
     }
 

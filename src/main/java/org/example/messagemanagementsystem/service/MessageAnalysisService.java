@@ -11,14 +11,24 @@ import org.springframework.stereotype.Service;
 public class MessageAnalysisService {
     private final OpenAiService openAiService;
     private final RedisCacheRepository redisCacheRepositoryRepository;
-    public MessageAnalysisResponse gptAnalyzeMessage(MessageAnalysisRequest request) {
-        String cacheKey = generateCacheKey(request);
-        MessageAnalysisResponse cachedResponse = (MessageAnalysisResponse) redisCacheRepositoryRepository.getCachedData(cacheKey);
-        if (cachedResponse != null) {
-            return cachedResponse;
-        }
-        var response = openAiService.getGptAnalyse(request);
-        redisCacheRepositoryRepository.cacheData(cacheKey, response);
+    private final MaxEntropyService maxEntropyService;
+    private final NativeBayesService nativeBayesService;
+
+    public MessageAnalysisResponse getAnalyzeMessage(MessageAnalysisRequest request) {
+//        String cacheKey = generateCacheKey(request);
+//        MessageAnalysisResponse cachedResponse = (MessageAnalysisResponse) redisCacheRepositoryRepository.getCachedData(cacheKey);
+//        if (cachedResponse != null) {
+//            return cachedResponse;
+//        }
+
+        var response = switch (request.getModel()) {
+            case "max-entropy" -> maxEntropyService.analyseMessage(request);
+            case "native-bayes" -> nativeBayesService.analyseMessage(request);
+            case "gpt" -> openAiService.getGptAnalyse(request);
+            default -> throw new IllegalArgumentException("Invalid model");
+        };
+
+        //redisCacheRepositoryRepository.cacheData(cacheKey, response);
         return response;
     }
 
